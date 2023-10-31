@@ -1,0 +1,23 @@
+{
+  "name": "webpack-full-course",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AniMate002/webpack-full-course.git"
+  },
+  "author": "Kiryl Shauchenka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AniMate002/webpack-full-course/issues"
+  },
+  "homepage": "https://github.com/AniMate002/webpack-full-course#readme",
+  "devDependencies": {
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
