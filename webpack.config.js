@@ -8,16 +8,34 @@
 // npm i -D copy-webpack-plugin
 // npm i -D mini-css-extract-plugin
 // npm i -D css-minimizer-webpack-plugin
+// npm i -D terser-webpack-plugin
+// npm i -D less less-loader
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin  = require('css-minimizer-webpack-plugin')
+const TerserPlugin = require("terser-webpack-plugin");
 
 const isDev = process.env.NODE_ENV
 const isProd = !isDev
 
+const optimal = () => {
+    const config = {
+        splitChunks:{
+            chunks: 'all'
+        },
+        // minimize: true,
+        // minimizer: [new CssMinimizerPlugin()]
+    }
+
+    if(isProd){
+        config.minimizer = [new CssMinimizerPlugin(), new TerserPlugin()]
+    }
+
+    return config
+}
 
 module.exports = {
     context: path.resolve(__dirname, 'src'),
@@ -30,15 +48,10 @@ module.exports = {
         filename: '[name].[contenthash].bundle.js',
         path: path.resolve(__dirname,'dist')
     },
-    optimization: {
-        splitChunks:{
-            chunks: 'all'
-        },
-        minimize: true,
-        minimizer: [new CssMinimizerPlugin()]
-    },
+    optimization: optimal(),
     devServer:{
-        port: 3000
+        port: 3000,
+        hot: isDev
     },
     resolve:{
         alias:{
@@ -49,7 +62,7 @@ module.exports = {
     plugins:[
         new HTMLWebpackPlugin({
             title: "Webpack",
-            template: './index.html'
+            template: './index.html',
         }),
         new CleanWebpackPlugin(),
         new CopyPlugin({
@@ -86,6 +99,10 @@ module.exports = {
             {
                 test: /\.csv$/i,
                 use: ["csv-loader"]
+            },
+            {
+                test: /\.less$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
             }
         ]
     }

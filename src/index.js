@@ -1,5 +1,6 @@
 import Post from "./Post"
 import './styles/styles.css'
+import './styles/less.less'
 import img from "@Assets/logo.png"
 import xml from "@Assets/data.xml"
 import csv from "@Assets/data.csv"
