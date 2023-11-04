@@ -10,6 +10,11 @@
 // npm i -D css-minimizer-webpack-plugin
 // npm i -D terser-webpack-plugin
 // npm i -D less less-loader
+// npm i -D babel-loader @babel/core @babel/preset-env
+// npm i -D @babel/plugin-transform-class-properties
+// npm i -D @babel/preset-typescript
+// npm i -D @babel/preset-react
+// npm i react react-dom
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -20,6 +25,19 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 const isDev = process.env.NODE_ENV
 const isProd = !isDev
+
+const babelOptions = preset => {
+    const options = {
+        presets: ['@babel/preset-env'],
+        plugins: ["@babel/plugin-transform-class-properties"]
+    }
+
+    if(preset){
+        options.presets.push(preset)
+    }
+
+    return options
+}
 
 const optimal = () => {
     const config = {
@@ -42,7 +60,9 @@ module.exports = {
     mode: 'production',
     entry:{
         main: './index.js',
-        analytics: './analytics.js'
+        analytics: './analytics.js',
+        babel: './babel.js',
+        ts: './ts.ts'
     },
     output:{
         filename: '[name].[contenthash].bundle.js',
@@ -103,6 +123,27 @@ module.exports = {
             {
                 test: /\.less$/i,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
+            },
+            {
+                test: /\.m?js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options:babelOptions()
+                }
+            },
+            {
+                test: /\.ts$/,
+                use:{
+                    loader: 'babel-loader',
+                    options:babelOptions('@babel/preset-typescript')
+                }
+            },
+            {
+                test: /\.jsx$/,
+                use:{
+                    loader: 'babel-loader',
+                    options: babelOptions("@babel/preset-react")
+                }
             }
         ]
     }
